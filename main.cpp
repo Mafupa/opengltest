@@ -55,7 +55,7 @@ int main(void){
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s", infoLog);
 	}
 	// fragmentShaderOrange
 	orangeFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -64,7 +64,7 @@ int main(void){
 	glGetShaderiv(orangeFragmentShader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(orangeFragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s", infoLog);
 	}
 	// fragmentShaderOrange
 	yellowFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -73,7 +73,7 @@ int main(void){
 	glGetShaderiv(yellowFragmentShader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(yellowFragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s", infoLog);
 	}
 
 	// linkShaderOrange
@@ -84,7 +84,7 @@ int main(void){
 	glGetProgramiv(orangeShaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(orangeShaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+		printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s", infoLog);
 	}
 	// linkShaderYellow
 	yellowShaderProgram = glCreateProgram();
@@ -94,7 +94,7 @@ int main(void){
 	glGetProgramiv(yellowShaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(yellowShaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+		printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s", infoLog);
 	}
 
 
