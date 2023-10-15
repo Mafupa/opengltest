@@ -1,7 +1,7 @@
 # Makefile for compiling a C++ program with GLFW and OpenGL
 
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++11 -Wall -static-libstdc++
 
 INCLUDE_DIR = include
 LIB_DIR = lib

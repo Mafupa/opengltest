@@ -24,9 +24,9 @@ int main(void){
 	unsigned int orangeShaderProgram, yellowShaderProgram;
 	unsigned int VBOs[2], VAOs[2];
 
-	vertexShaderSource = readFile("basic.vert");
-	orangeFragmentShaderSource = readFile("orange.frag");
-	yellowFragmentShaderSource = readFile("yellow.frag");
+	vertexShaderSource = readFile("shaders/basic.vert");
+	orangeFragmentShaderSource = readFile("shaders/orange.frag");
+	yellowFragmentShaderSource = readFile("shaders/yellow.frag");
 
 	if(!vertexShaderSource || !orangeFragmentShaderSource || !yellowFragmentShaderSource)
 		exit(EXIT_FAILURE);
