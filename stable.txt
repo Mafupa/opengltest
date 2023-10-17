@@ -1,0 +1,36 @@
+#include <GLFW/glfw3.h>
+#include <iostream>
+
+float xPosition = 0.5f; 
+float yPosition = 0.5f; 
+
+int main() {
+	if (!glfwInit()) {
+		std::cerr << "Failed to initialize GLFW" << std::endl;
+		return -1;
+	}
+	GLFWwindow* window = glfwCreateWindow(800, 600, "ECS Cube", nullptr, nullptr);
+
+	if (!window) {
+		glfwTerminate();
+		std::cerr << "Failed to create GLFW window" << std::endl;
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	while (!glfwWindowShouldClose(window)) {
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBegin(GL_QUADS);
+		glColor3f(1.0f, 1.0f, 0.0f);
+		glVertex2f(xPosition - 0.1f, yPosition - 0.1f);
+		glVertex2f(xPosition + 0.1f, yPosition - 0.1f);
+		glVertex2f(xPosition + 0.1f, yPosition + 0.1f);
+		glVertex2f(xPosition - 0.1f, yPosition + 0.1f);
+		glEnd();
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
+}

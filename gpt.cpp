@@ -1,4 +1,3 @@
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <vector>
@@ -28,10 +27,12 @@ public:
         yPosition += dy * moveSpeed;
     }
 
+    void update() override {}
+
     void render() override {
         // Draw the yellow square at the player's position
-        glColor3f(1.0f, 1.0f, 0.0f); // Yellow color
         glBegin(GL_QUADS);
+        glColor3f(1.0f, 1.0f, 0.0f); // Yellow color
         glVertex2f(xPosition - 0.1f, yPosition - 0.1f);
         glVertex2f(xPosition + 0.1f, yPosition - 0.1f);
         glVertex2f(xPosition + 0.1f, yPosition + 0.1f);
@@ -54,11 +55,12 @@ public:
         xPosition += dx * moveSpeed;
         yPosition += dy * moveSpeed;
     }
+    void update() override {}
 
     void render() override {
         // Draw the red square at the enemy's position
-        glColor3f(1.0f, 0.0f, 0.0f); // Red color
         glBegin(GL_QUADS);
+        glColor3f(1.0f, 0.0f, 0.0f); // Red color
         glVertex2f(xPosition - 0.05f, yPosition - 0.05f);
         glVertex2f(xPosition + 0.05f, yPosition - 0.05f);
         glVertex2f(xPosition + 0.05f, yPosition + 0.05f);
@@ -73,16 +75,14 @@ public:
     std::vector<Entity*> entities;
 
     void update() {
-        /*for (auto& entity : entities) {
-            // Process input, update logic, etc.
+        for (auto& entity : entities) {
 	    entity->update();
-        }*/
+        }
     }
 
     void render() {
         glClear(GL_COLOR_BUFFER_BIT);
-
-        for (auto entity : entities) {
+        for (auto& entity : entities) {
 		entity->render();
         }
     }
@@ -107,13 +107,13 @@ int main() {
     ECS ecs;
 
     Player playerEntity(0.0f, 0.0f, 0.05f);
-    ecs.entities.push_back(&playerEntity);
+    ecs.entities.push_back((Entity*)&playerEntity);
 
     // Create enemy entities
     Enemy enemy1Entity(-0.2f, 0.3f, 0.02f);
     Enemy enemy2Entity(0.4f, -0.1f, 0.03f);
-    ecs.entities.push_back(&enemy1Entity);
-    ecs.entities.push_back(&enemy2Entity);
+    ecs.entities.push_back((Entity*)&enemy1Entity);
+    ecs.entities.push_back((Entity*)&enemy2Entity);
 
     while (!glfwWindowShouldClose(window)) {
         ecs.update();
@@ -128,4 +128,3 @@ int main() {
 
     return 0;
 }
-

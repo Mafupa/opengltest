@@ -2,7 +2,6 @@
 
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -static-libstdc++
-
 INCLUDE_DIR = include
 LIB_DIR = lib
 
