@@ -2,8 +2,37 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <cmath>
 
 GLFWwindow* window; 
+
+class Vector2 {
+public:
+	float x;
+	float y;
+
+	Vector2(float _x = 0.0f, float _y = 0.0f) : x(_x), y(_y) {}
+
+	Vector2 normalize() const {
+		float length = std::sqrt(x * x + y * y);
+		if (length != 0.0f) {
+			return Vector2(x / length, y / length);
+		else
+			return Vector2(x, y);
+	}
+
+	Vector2 dot(const Vector2& other) const {
+		return x * other.x + y * other.y;
+	}
+
+	Vector2 cross(const Vector2& other) const {
+		return x * other.y - y * other.x;
+	}
+
+	Vector2 operator*(float scalar) const {
+		return Vector2(x * scalar, y * scalar);
+	}
+}
 
 class Entity {
 public:
@@ -142,14 +171,13 @@ int main() {
 		std::chrono::duration<float> frameDuration =
 			std::chrono::duration_cast<std::chrono::duration<float>>(frameEnd - frameStart);
 		deltaTime = frameDuration.count();
-		elapsedTime += frameDuration.count();
+		elapsedTime += deltaTime;
 		frameCount++;
 		if (elapsedTime >= 1.0f) {
 			fps = static_cast<float>(frameCount) / elapsedTime;
 			frameCount = 0;
 			elapsedTime = 0.0f;
-			system("clear");
-			std::cout << "FPS : " << fps << std::endl;
+			// std::cout << "FPS : " << fps << std::endl;
 		}
 	}
 
