@@ -1,132 +1,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <vector>
 #include <chrono>
-#include <cmath>
+#include <string>
+#include "Entity.h"
 
 GLFWwindow* window; 
-
-class Vector2 {
-public:
-	float x;
-	float y;
-
-	Vector2(float _x = 0.0f, float _y = 0.0f) : x(_x), y(_y) {}
-
-	Vector2 normalize() const {
-		float length = std::sqrt(x * x + y * y);
-		if (length != 0.0f) {
-			return Vector2(x / length, y / length);
-		else
-			return Vector2(x, y);
-	}
-
-	Vector2 dot(const Vector2& other) const {
-		return x * other.x + y * other.y;
-	}
-
-	Vector2 cross(const Vector2& other) const {
-		return x * other.y - y * other.x;
-	}
-
-	Vector2 operator*(float scalar) const {
-		return Vector2(x * scalar, y * scalar);
-	}
-}
-
-class Entity {
-public:
-	float xPosition;
-	float yPosition;
-	float moveSpeed;
-
-	Entity(float x = 0.0f, float y = 0.0f, float speed = 0.05f)
-		: xPosition(x), yPosition(y), moveSpeed(speed) {}
-
-	virtual void update(float deltaTime) {} // Virtual function for updating
-	virtual void render() {} // Virtual function for rendering
-};
-
-
-
-class Player : public Entity {
-public:
-	Player(float x = 0.0f, float y = 0.0f, float speed = 0.05f) 
-		: Entity(x, y, speed) {}
-
-	void move(float dx, float dy) {
-		xPosition += dx * moveSpeed;
-		yPosition += dy * moveSpeed;
-	}
-
-	void update(float deltaTime) override {
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			yPosition += 0.5f * deltaTime;
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			xPosition -= 0.5f * deltaTime;
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			yPosition -= 0.5f * deltaTime;
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			xPosition += 0.5f * deltaTime;
-		//printf("[%f, %f]\n", xPosition, yPosition);
-	}
-
-	void render() override {
-		glBegin(GL_QUADS);
-		glColor3f(1.0f, 1.0f, 0.0f); // Yellow color
-		glVertex2f(xPosition - 0.05f, yPosition - 0.05f);
-		glVertex2f(xPosition + 0.05f, yPosition - 0.05f);
-		glVertex2f(xPosition + 0.05f, yPosition + 0.05f);
-		glVertex2f(xPosition - 0.05f, yPosition + 0.05f);
-		glEnd();
-	}
-};
-
-class Enemy : public Entity {
-public:
-
-	Enemy(float x = 0.0f, float y = 0.0f, float speed = 0.03f)
-		: Entity(x, y, speed) {}
-
-	void moveRandomly() {
-		// Generate random values for movement
-		float dx = static_cast<float>(rand() % 3 - 1);  // Random value in range [-1, 1]
-		float dy = static_cast<float>(rand() % 3 - 1);
-
-		xPosition += dx * moveSpeed;
-		yPosition += dy * moveSpeed;
-	}
-	void update(float deltaTime) override {}
-
-	void render() override {
-		glBegin(GL_QUADS);
-		glColor3f(1.0f, 0.0f, 0.0f); // Red color
-		glVertex2f(xPosition - 0.05f, yPosition - 0.05f);
-		glVertex2f(xPosition + 0.05f, yPosition - 0.05f);
-		glVertex2f(xPosition + 0.05f, yPosition + 0.05f);
-		glVertex2f(xPosition - 0.05f, yPosition + 0.05f);
-		glEnd();
-	}
-};
-
-
-class ECS {
-public:
-	std::vector<Entity*> entities;
-
-	void update(float deltaTime) {
-		for (auto& entity : entities) {
-		entity->update(deltaTime);
-		}
-	}
-
-	void render() {
-		glClear(GL_COLOR_BUFFER_BIT);
-		for (auto& entity : entities) {
-		entity->render();
-		}
-	}
-};
 
 int main() {
 	if (!glfwInit()) {
@@ -134,7 +12,7 @@ int main() {
 		return -1;
 	}
 
-	window = glfwCreateWindow(800, 600, "ECS Cube", nullptr, nullptr);
+	window = glfwCreateWindow(800, 800, "ECS Cube", nullptr, nullptr);
 
 	if (!window) {
 		glfwTerminate();
@@ -147,12 +25,15 @@ int main() {
 
 	ECS ecs;
 
-	Player playerEntity(0.0f, 0.0f, 0.1f);
+	// Create player
+	Player playerEntity(0.0f, 0.0f, 0.5f);
 	ecs.entities.push_back(&playerEntity);
 
 	// Create enemy entities
-	Enemy enemy1Entity(-0.2f, 0.3f, 0.02f);
-	Enemy enemy2Entity(0.4f, -0.1f, 0.03f);
+	Enemy enemy1Entity(-0.2f, 0.3f, 0.3f);
+	Enemy enemy2Entity(0.4f, -0.1f, 0.3f);
+	enemy2Entity.target = &playerEntity;
+	enemy1Entity.target = &playerEntity;
 	ecs.entities.push_back(&enemy1Entity);
 	ecs.entities.push_back(&enemy2Entity);
 
@@ -161,7 +42,8 @@ int main() {
 	int frameCount = 0;
 
 	while (!glfwWindowShouldClose(window)) {
-	frameStart = std::chrono::steady_clock::now();
+		frameStart = std::chrono::steady_clock::now();
+		
 		ecs.update(deltaTime);
 		ecs.render();
 
@@ -177,7 +59,8 @@ int main() {
 			fps = static_cast<float>(frameCount) / elapsedTime;
 			frameCount = 0;
 			elapsedTime = 0.0f;
-			// std::cout << "FPS : " << fps << std::endl;
+			if (0)
+				std::cout << "FPS : " << fps << std::endl;
 		}
 	}
 
